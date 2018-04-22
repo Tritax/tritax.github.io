@@ -1,0 +1,64 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>CYOA</title>
+	<link type='text/css' rel='Stylesheet' href='./css/cyoa.css' />
+
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+	<script src='./js/cyoa.js'></script>
+</head>
+
+<body>
+	<div class='game'>
+		<div class='ova'></div>
+		<div class='menu'>
+		</div>
+
+		<div class='ui'>
+			<div class='hdr'>
+				<img class='burger' src='./images/burger.png' />
+				<div class='title'>The Tomb of Tales</div>
+			</div>
+
+			<div class='main'>
+				<div class='chapter'></div>
+				<div class='prose'></div>
+				<div class='opts'></div>
+			</div>
+
+			<div class='ftr'>
+			</div>
+		</div>
+
+		<div class='combat'>
+			<div class='oppo'></div>
+			<div class='fight'>
+				<img class='combatanim blooda' src='./images/blood1.png' />
+				<img class='combatanim bloodb' src='./images/blood2.png' />
+				<img class='combatanim slash' src='./images/slash.png' />
+
+				<div class='hp oppoHp'>
+					<div class='val'></div>
+					<div class='bar'></div>
+				</div>
+				<div class='hp plyrHp'>
+					<div class='val'></div>
+					<div class='bar'></div>
+				</div>
+				<div class='combatoptions'>
+					<img class='attOpt' src='./images/attack.png' />
+					<img class='magOpt' src='./images/magic.png' />
+					<img class='iteOpt' src='./images/item.png' />
+				</div>
+			</div>
+			<div class='log'></div>
+			<div class='res'>
+				<div class='ttl'></div>
+				<div class='msg'></div>
+				<div class='btn combatOk'>Okay</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
