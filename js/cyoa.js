@@ -1,7 +1,7 @@
 // CYOA
 // 
 
-var _book = {}, _debug = true;
+var _book = {}, _debug = false;
 
 $(document).ready(function () {
 	$(window).on('resize', function () {
@@ -20,10 +20,19 @@ $(document).ready(function () {
 	});
 	$(".attOpt").click(function () {
 		if (!_book.curr_combat.cd) {
-			_book.curr_combat.curr_hp -= _book.sheet.dps;
-			updateCombatUI();
-			combatAnim('.slash', .8, 250, function () { combatTick(); });
+			var d = roll(100);
+			var s = "[Roll 1d100 = " + d + "] ";
+			if (d >= 100 - _book.curr_combat.tohit) {
+				s += "Hit!";
+				_book.curr_combat.curr_hp -= _book.sheet.dps;
+				updateCombatUI();
+				combatAnim('.slash', .8, 250, function () { combatTick(); });
+			} else {
+				s += "Miss!";
+				setTimeout(combatTick, 250);
+			}
 			doCooldown(1500);
+			logCombat(s);
 		}
 	});
 	$(".magOpt").click(function () {
@@ -75,6 +84,11 @@ function handleAction(i)
 	}
 }
 
+function roll(d) 
+{
+	return Math.floor(Math.random() * d) + 1
+}
+
 function jumpToPage(idx)
 {
 	$(".main").animate({ opacity: 0.0 }, 100, function () {
@@ -113,7 +127,7 @@ function doCooldown(cd)
 
 function logCombat (m)
 {
-	$(".combat .log").append("<div>" + m + "</div>");
+	$(".combat .log").append("<div>" + m + "</div>").animate({ scrollTop: $(".combat .log").prop("scrollHeight") - $(".combat .log").height() }, 10);
 }
 
 function termCombat(ttl, msg, btn)
@@ -135,18 +149,36 @@ function endCombat(idx)
 
 function combatTick()
 {
-	if (_book.sheet.curr_hp <= 0) {
-		termCombat("You were defeated!", "You have been killed! :(", "Okay");
-	} else if (_book.curr_combat.curr_hp <= 0) {
-		termCombat("You are triumphant!", "You have defeated your foe!", "Okay");
+	if (checkForEndOfCombat())
 		return;
-	} else {
+
+	var d = roll(100);
+	var s = "[Roll 1d100 = " + d + "] ";
+	if (d >= 100 - _book.sheet.tohit) {
 		_book.sheet.curr_hp -= _book.curr_combat.dps;
 		combatAnim(".blooda", .8, 250);
 		combatAnim(".bloodb", .5, 750);
+		s += "The monster hit you!";
+	} else {
+		s += "The monster missed.";
 	}
+	logCombat(s);
 
 	updateCombatUI();
+	checkForEndOfCombat();
+}
+
+function checkForEndOfCombat()
+{
+	if (_book.sheet.curr_hp <= 0) {
+		termCombat("You were defeated!", "You have been killed! :(", "Okay");
+		return true;
+	} else if (_book.curr_combat.curr_hp <= 0) {
+		termCombat("You are triumphant!", "You have defeated your foe!", "Okay");
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function updateCombatUI()
@@ -190,7 +222,7 @@ function initializeBook()
 		_book = {
 			current: 0, prev: 0,
 			sheet: {
-				curr_hp: 10, max_hp: 10, dps: 2,
+				curr_hp: 10, max_hp: 10, dps: 2, tohit: 65
 			},
 			curr_combat: {},
 			rooms: [
@@ -233,7 +265,7 @@ function initializeBook()
 		};
 		setupRoom();
 	} else {
-		$.getJSON("./books/intro.js", function (ret) {
+		$.getJSON("./books/intro_book.js", function (ret) {
 			_book = ret;
 			setupRoom();
 		});
