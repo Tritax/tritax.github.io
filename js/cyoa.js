@@ -216,6 +216,31 @@ function roomById(id)
 	return null;
 }
 
+function save() {
+	var data = {
+		current: _book.current,
+		prev: _book.prev,
+		sheet: {
+			curr_hp: _book.sheet.curr_hp,
+			max_hp: _book.sheet.max_hp,
+			dps: _book.sheet.dps,
+			tohit: _book.sheet.tohit
+		}
+	};
+
+	localStorage.setItem("save_game", escape(JSON.stringify(data)));
+}
+
+function load() {
+	var data = JSON.parse(unescape(localStorage.getItem("save_game")));
+	_book.current = data.current;
+	_book.prev = data.prev;
+	_book.sheet.curr_hp = data.sheet.curr_hp;
+	_book.sheet.max_hp = data.sheet.max_hp;
+	_book.sheet.dps = data.sheet.dps;
+	_book.sheet.tohit = data.sheet.tohit;
+}
+
 function initializeBook()
 {
 	if (_debug) {
